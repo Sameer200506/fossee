@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# archives / bundles
+*.zip
+*.rar
+*.7z
+
+# OpenFOAM iteration fields (large); keep 0/, constant/, system/ and final answer
+fosseetask2/Case*/[1-9]*/
+fosseetask2/grid_independence/*/[1-9]*/
+FOSSEE_Task1/Re*/[1-9]*/
+FOSSEE_Task1/grid_independence/*/[1-9]*/
+FOSSEE_Task2/Case*/[1-9]*/
+FOSSEE_Task2/grid_independence/*/[1-9]*/
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

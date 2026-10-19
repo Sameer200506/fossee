@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+echo "=========================================================="
+echo "    Running FOSSEE Task 2: Heat Transfer CFD Simulations   "
+echo "=========================================================="
+source /opt/openfoam13/etc/bashrc
+
+CASES=("Case1_77C" "Case2_127C" "Case3_177C")
+
+for c in "${CASES[@]}"; do
+    echo ""
+    echo ">>> Meshing and running $c..."
+    cd "$c"
+    blockMesh > log.blockMesh 2>&1
+    checkMesh > log.checkMesh 2>&1
+    foamRun -solver incompressibleFluid > log.foamRun 2>&1
+    cd ..
+    echo ">>> $c completed successfully!"
+done
+
+echo ""
+echo "=========================================================="
+echo "    Running Task 2 Grid Independence Study Cases          "
+echo "=========================================================="
+cd grid_independence
+for c in "${CASES[@]}"; do
+    for m in "coarse" "fine"; do
+        cname="${c}_${m}"
+        echo ">>> Running $cname..."
+        cd "$cname"
+        blockMesh > log.blockMesh 2>&1
+        foamRun -solver incompressibleFluid > log.foamRun 2>&1
+        cd ..
+        echo ">>> $cname completed successfully!"
+    done
+done
+cd ..
+
+echo ""
+echo "All Task 2 simulations finished successfully!"

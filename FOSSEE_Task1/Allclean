@@ -1,0 +1,17 @@
+#!/bin/bash
+# ==============================================================================
+# FOSSEE Task 1: Clean Script
+# ==============================================================================
+
+CASES=("Re60" "Re80" "Re100")
+
+for CASE in "${CASES[@]}"; do
+    if [ -d "${CASE}" ]; then
+        echo "Cleaning ${CASE}..."
+        cd "${CASE}"
+        rm -rf [1-9]* 0.* log.* postProcessing constant/polyMesh
+        cd ..
+    fi
+done
+
+echo "Clean completed."

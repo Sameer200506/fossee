@@ -1,0 +1,52 @@
+#!/bin/bash
+# ==============================================================================
+# FOSSEE Autumn Semester-Long Internship 2026: Screening Task 1 (Fluid Mechanics)
+# Master Allrun Script for OpenFOAM
+# ==============================================================================
+
+set -e
+
+# Source OpenFOAM environment
+if [ -f /opt/openfoam13/etc/bashrc ]; then
+    source /opt/openfoam13/etc/bashrc
+elif [ -f /usr/lib/openfoam/openfoam*/etc/bashrc ]; then
+    source /usr/lib/openfoam/openfoam*/etc/bashrc
+elif [ -f /opt/openfoam*/etc/bashrc ]; then
+    source /opt/openfoam*/etc/bashrc
+fi
+
+CASES=("Re60" "Re80" "Re100")
+
+echo "=================================================================="
+echo "    Starting FOSSEE Task 1 Fluid Mechanics CFD Simulations       "
+echo "=================================================================="
+
+for CASE in "${CASES[@]}"; do
+    echo ""
+    echo "------------------------------------------------------------------"
+    echo " Running Case: ${CASE}"
+    echo "------------------------------------------------------------------"
+    cd "${CASE}"
+    
+    echo " Generating 2D mesh with blockMesh..."
+    blockMesh > log.blockMesh 2>&1
+    
+    echo " Checking mesh quality..."
+    checkMesh > log.checkMesh 2>&1
+    
+    echo " Running steady-state incompressible solver..."
+    if command -v foamRun &> /dev/null; then
+        foamRun -solver incompressibleFluid > log.solver 2>&1
+    elif command -v simpleFoam &> /dev/null; then
+        simpleFoam > log.solver 2>&1
+    fi
+    
+    echo " Completed case: ${CASE}."
+    cd ..
+done
+
+echo ""
+echo "=================================================================="
+echo " All simulations completed successfully!"
+echo " Results are available in Re60/, Re80/, and Re100/ directories."
+echo "=================================================================="
